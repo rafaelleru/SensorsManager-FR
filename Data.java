@@ -2,8 +2,6 @@
 // Clase Data
 //
 
-package SensorsManagement;
-
 import java.util.Date;
 
 public class Data{
