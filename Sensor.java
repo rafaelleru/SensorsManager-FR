@@ -21,6 +21,7 @@ class Sensor{
 
     public Sensor(String l){
 	this.location = l;
+	d = new Data();
 	//start();
     }
 
@@ -39,7 +40,7 @@ class Sensor{
 	//Aqui se hace la conexion TCP y se manda d;
 	Socket socket = null;
 	int puerto=8888;
-	String anfitrion="www.tumaebotcompany.ddns.net";
+	String anfitrion="0.0.0.0";
 
 	try {
 	    socket=new Socket (anfitrion,puerto); //Abrimos el socket
@@ -62,7 +63,7 @@ class Sensor{
 	//Enviamos los datos del sensor
 
 	if(this.location == null){
-	    outPrinter.print("LOCATION:" + d.getLocation() + "DATA:" + d.getData());
+	    outPrinter.println("LOCATION:" + d.getLocation() + "DATA:" + d.getData());
 	}else{
 	    outPrinter.println(this.location + "DATA:" + d.getData());
 	}
@@ -95,6 +96,8 @@ class Sensor{
 	    System.out.println("Uso: java sensor (localizacion del sensor)");
 	else{
 	    sensor = new Sensor(args[0]);
+	    sensor.getDataFromAPI();
+	    sensor.sendDataToServer();
 	}
     }
 }

@@ -1,0 +1,12 @@
+//
+// Servidor Gestor Datos 
+//
+
+import java.io.*;
+import java.net.*;
+import java.util.Date;
+import java.util.ArrayList;
+
+public class ServidorGD{
+    
+}

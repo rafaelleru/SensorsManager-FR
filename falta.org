@@ -1,0 +1,10 @@
+* TODO comprobar sensores UDP
+* TODO limpiar codigo servidor
+* TODO parsear data (dividir localizacion y datos)
+* TODO manejar concurrencia
+
+=SI DA TIEMPO=
+
+* TODO Segundo servidor o escribir datos a fichero
+
+* TODO cliente para comprobar los datos.
