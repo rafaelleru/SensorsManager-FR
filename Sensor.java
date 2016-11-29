@@ -18,12 +18,48 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-class Sensor{
+//package SensorsManagement;
+
+class Sensor implements Runnable{
+    private Thread = null;
     private Data d;
     private String location;
 
+    private SensorThread sensor = null;
+
     public Sensor(String l){
 	this.location = l;
+	start();
+    }
+
+    public void run(){
+	while(thread!=null){
+	  Random generator = new Random(); 
+	  int i = generator.nextInt(10) + 1;
+
+	  if(i == 3){
+	      sendDataToServer();
+	  }
+	}
+    }
+
+    public void start() throws IOException{
+     	if(thread == null){
+	    System.out.println('Sensor arrancado');
+
+	    sensor = new SensorThread();
+	    thread = new Thread(this);
+	    thread.start();
+	}
+    }
+
+    public void stop(){
+	if(thread != null){
+	    thread.stop();
+	    thread = null;
+	}
+	sensor.close();  
+	sensor.stop();
     }
 
     public getDataFromAPI(){
@@ -37,7 +73,7 @@ class Sensor{
 	d.addData('fake data, 0º/23º');
     }
 
-    public sendDataToServer(){
+    public void sendDataToServer(){
 	//Aqui se hace la conexion TCP y se manda d;
 	Socket socket;
 	int puerto=8888;
@@ -67,6 +103,9 @@ class Sensor{
 	for(String s: d.getData()){
 	    outPrinter.println(s);
 	}
+
+	outputStream.close();
+	socket.close();
 	
 	
     }
@@ -75,6 +114,15 @@ class Sensor{
 	//hay que recibir datos por tcp
 	//Si se recibe
 	return 1;
+    }
+
+    public static void main(String args[]){
+	Sensor sensor = null;
+	if(args.length != 1)
+	    System.out.println("Uso: java sensor (localizacion del sensor)");
+	else{
+	    sensor = new Sensor(agrs[0]);
+	}
     }
 
 
