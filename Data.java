@@ -4,6 +4,7 @@
 
 //import java.util.Date;
 
+
 public class Data{
     private String fecha; //(año, mes, dia, hora, min, seg)
     private String text;
