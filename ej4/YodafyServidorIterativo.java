@@ -13,7 +13,6 @@ public class YodafyServidorIterativo {
 
 		// Puerto de escucha
 		int port=8888;
-		byte[] bufer = new byte[256];
 
 		try {
 
@@ -21,9 +20,9 @@ public class YodafyServidorIterativo {
 			DatagramPacket paquete = null;
 			// Mientras ... siempre!
 			do {
-				paquete = new DatagramPacket(bufer, bufer.length);
+                byte[] bufer = new byte[256];
+                paquete = new DatagramPacket(bufer, bufer.length);
 				serverSocket.receive(paquete);
-				System.out.println("Paquete recibido");
 				ProcesadorYodafy procesador = new ProcesadorYodafy(serverSocket, paquete);
 				procesador.start();
 			} while (true);

@@ -18,10 +18,9 @@ public class ProcesadorYodafy  extends Thread{
 	private DatagramSocket socketServicio;
 	private DatagramPacket paqueteRecibido, paqueteEnviado;
 
-	private byte[] bufer= new byte[256];
+	
 	private int port;
 	private InetAddress address;
-	private String msj;
 	// Para que la respuesta sea siempre diferente, usamos un generador de números aleatorios.
 	private Random random;
 
@@ -35,24 +34,29 @@ public class ProcesadorYodafy  extends Thread{
 
 	// Aquí es donde se realiza el procesamiento realmente:
 	void procesa(){
-		try {
+		String bufer="";
+        String msj="";
+
 			msj = new String(paqueteRecibido.getData());
+			
 			address = paqueteRecibido.getAddress();
 			port = paqueteRecibido.getPort();
-			System.out.println("Paquete recibido para yodaficar");
-			bufer = (yodaDo(msj)).getBytes();
-			paqueteEnviado = new DatagramPacket(bufer, bufer.length, address, port);
-			System.out.println(bufer);
-		} catch (IOException e) {
-			System.err.println("Error al enviar el paquete ");
-		}
+			bufer = yodaDo(msj);
+            
+            System.out.println(msj);
 
+			//paqueteEnviado = new DatagramPacket(bufer, bufer.length, address, port);
+			System.out.println("-------------------------------------------");
+			System.out.println(bufer);
+			
 	}
 
 	// Yoda interpreta una frase y la devuelve en su "dialecto":
 	private String yodaDo(String peticion) {
-		String[] s = peticion.split(":");
-		return "Fecha: "+s[0]+"\nLocalización: "+s[1]+"\nTemperatura: "+s[2]+"\n";
+        String f;
+		String[] s = peticion.split(":"); 
+		f = "Fecha: "+s[0]+"\nLocalizacion: "+s[1]+"\nTemperatura: "+s[2]+"\n";
+		return f;
 		
 	}
 	public void run(){
