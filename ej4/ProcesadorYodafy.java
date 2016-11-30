@@ -13,7 +13,7 @@ import java.util.Random;
 // Nota: si esta clase extendiera la clase Thread, y el procesamiento lo hiciera el método "run()",
 // ¡Podríamos realizar un procesado concurrente!
 //
-public class ProcesadorYodafy {
+public class ProcesadorYodafy  extends Thread{
 	// Referencia a un socket para enviar/recibir las peticiones/respuestas
 	private DatagramSocket socketServicio;
 	private DatagramPacket paqueteRecibido, paqueteEnviado;
@@ -42,8 +42,7 @@ public class ProcesadorYodafy {
 			System.out.println("Paquete recibido para yodaficar");
 			bufer = (yodaDo(msj)).getBytes();
 			paqueteEnviado = new DatagramPacket(bufer, bufer.length, address, port);
-			socketServicio.send(paqueteEnviado);
-			System.out.println("Paquete yodificado enviado");
+			System.out.println(bufer);
 		} catch (IOException e) {
 			System.err.println("Error al enviar el paquete ");
 		}
@@ -52,24 +51,11 @@ public class ProcesadorYodafy {
 
 	// Yoda interpreta una frase y la devuelve en su "dialecto":
 	private String yodaDo(String peticion) {
-		// Desordenamos las palabras:
-		String[] s = peticion.split(" ");
-		String resultado="";
-
-		for(int i=0;i<s.length;i++){
-			int j=random.nextInt(s.length);
-			int k=random.nextInt(s.length);
-			String tmp=s[j];
-
-			s[j]=s[k];
-			s[k]=tmp;
-		}
-
-		resultado=s[0];
-		for(int i=1;i<s.length;i++){
-		  resultado+=" "+s[i];
-		}
-
-		return resultado;
+		String[] s = peticion.split(":");
+		return "Fecha: "+s[0]+"\nLocalización: "+s[1]+"\nTemperatura: "+s[2]+"\n";
+		
+	}
+	public void run(){
+		procesa();
 	}
 }
