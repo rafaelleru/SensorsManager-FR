@@ -1,0 +1,92 @@
+
+import java.io.*;
+import java.net.*;
+import java.util.Date;
+import java.util.ArrayList;
+
+public class DataServerThread extends Thread{
+    private Data unData;
+    //private DataServer server = null;
+    private Socket socket = null;
+    private int ID = -1;
+    private DataInputStream streamIn = null;
+    private DataOutputStream streamOut = null;
+
+    /*public DataServerThread(DataServer unServer, Socket unSocket){
+      super();
+      server = unServer;
+      socket = unSocket;
+      port = this.socket.getPort();
+      } */   
+
+    public boolean verifyData(Data unData){
+	boolean verify = false;
+	Date fechaData = unData.getDate();
+	Date fechaOld = new Date(116, 11, 1, 00, 00, 00);
+
+	if(fechaData.after(fechaOld)){
+	    verify = true;
+	}
+
+	return verify;
+    }
+
+    public int getID(){
+	return ID;
+    }
+
+    public void send(String msg){
+	try{
+	    streamOut.writeUTF(msg);
+	    streamOut.flush();
+	}catch(IOException ioe){
+	    System.out.println(ID + "Error sending: " + ioe.getMessage());
+	    server.remove(ID);
+	    stop();
+	}
+    }
+
+    public void run(){
+	System.out.println("Hebra server "+ID+" eje.");
+
+	do{
+	    try{
+		server.handle(ID, streamIn.readUTF());
+	    }catch(IOException ioe){
+		System.out.println(ID+"Error lectura"+ioe.getMessage());
+		server.remove(ID);
+		stop();
+	    }
+	}while(true);
+    }
+
+    public void open() throws IOException{
+	streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+	streamOut = new DataOutputStream(new BufferedOutStream(socket.getOutStream()));
+    }
+
+    public void close() throws IOException{
+	if(socket != null)
+	    socket.close();
+	if(streamIn != null)
+	    streamIn.close();
+	if(streamOut != null)
+	    streamOut.close();
+    }
+
+    /* public void recibeData(){
+	ServerSocket unSocket;
+	int puerto=888;
+
+	try {
+	    unSocket = new ServerSocket(puerto);
+	} catch (IOException e) {
+	    System.out.println("Error:  no  se  pudo  atender  en  el puerto "+puerto);
+	}
+
+	unSocket.accept();
+	BufferedReader inReader = new BufferedReader(new InputStreamReader(unSocket.getInputStream()));
+	}*/
+
+    
+}

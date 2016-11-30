@@ -1,0 +1,110 @@
+import java.io.*;
+import java.net.*;
+import java.util.Date;
+import java.util.ArrayList;
+
+public class DataServer implements Runnable{
+    private DataServerThread clients[] = new DataServerThread[3];
+    private ServerSocket server = null;
+    private Thread thread = null;
+    private int ClientCount = 0;
+
+    public DataServer(int port){
+	try{
+	    System.out.println("Escuchando puerto: "+port);
+	    server = new ServerSocket(port);
+	    System.out.println("Server started: "+ server);
+	    start();
+	}catch(IOException ioe){
+	    System.out.println("No enlaza " + port + " :" +  ioe.getMessage());
+	}
+    }
+
+    public void run(){
+	while(thread != null){
+	    try{
+		System.out.println("Esperando conexion..");
+		addThread(server.accept());
+	    }catch(IOException ioe){
+		System.out.println("Server accept error: " + ioe);
+		stop();
+	    }
+	}
+    }
+
+    public void start(){
+	if(thread == null){
+	    thread = new Thread(this);
+	}
+	thread.start();
+    }
+
+    public void stop(){
+	if(thread != null){
+	    thread.stop();
+	}
+	thread = null;
+    }
+
+    private int findClient(int ID){
+	for(int i=0; i<ClientCount; i++){
+	    if(clients[i].getID() == ID)
+		return i;
+	}
+	return -1;
+    }
+
+    public synchronized void handle(String input){
+	if(input != null)
+	    System.out.println(input);
+    
+    }
+
+    public synchronized void remove(int ID){
+	int pos = findClient(ID);
+	if(pos >= 0){
+	    DataServerThread toTerminate = clients[pos];
+	    System.out.println("Removing " + ID + " at " + pos );
+
+	    if(pos < ClientCount-1){
+		for(int i=pos+1; i<ClientCount; i++){
+		    clients[i-1] = clients[i];
+		}
+	    }
+	    ClientCount = ClientCount-1;
+	    try{
+		toTerminate.close();
+	    }catch(IOException ioe){
+		System.out.println("Error, closing: " + ioe);
+	    }
+	    toTerminate.stop();
+	}
+    }
+
+    private void addThread(Socket socket){
+	if(ClientCount < clients.length){
+	    System.out.println("Client aceptado: "+socket);
+	    clients[ClientCount] = new DataServerThread(this, socket);
+
+	    try{
+		clients[ClientCount].open();
+		clients[ClientCount].start();
+		ClientCount++;
+	    }catch(IOException ioe){
+		System.out.println("Error hebra: "+ioe);
+	    }
+	}else{
+	    System.out.println("Cliente rechazado: maximo " +clients.length+ " alcanzado.");
+	}
+    }
+
+    public static void main(String args[]){
+	DataServer server = null;
+	if(args.length != 1)
+	    System.out.println("Uso: java DataServer port");
+	else
+	    server = new DataServer(Integer.parseInt(args[0]));
+    }
+
+    
+}

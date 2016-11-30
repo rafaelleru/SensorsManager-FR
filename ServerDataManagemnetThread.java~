@@ -1,0 +1,30 @@
+//
+// Servidor Gestor Datos 
+//
+
+package SensorsManagement;
+
+import java.io.*;
+import java.net.*;
+import java.util.Date;
+import java.util.ArrayList;
+
+public class DataServerThread extends Thread{
+    private Data unData;
+    private DataServerThread server = null;
+    private Socket socket = null;
+    private int port = -1;
+   
+
+    public boolean verifyDate(Data unData){
+	Date fechaData = unData.getDate();
+	Date fechaOld = new Date(116, 11, 1, 00, 00, 00);
+
+	if(fechaData.after(fechaOld))
+	    return true;
+	else
+	    return false;
+    }
+
+    
+}

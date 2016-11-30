@@ -1,68 +1,31 @@
 //Autor: Rafael Leyva Ruiz rafaelleru95103@gmail.com
 
 import java.util.ArrayList;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
-import java.net.URL;
-import java.net.HttpURLConnection;
-
-import org.json.JSONArray;
+/*import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+*/
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.*;
+import java.io.*;
 
 //package SensorsManagement;
 
-class Sensor implements Runnable{
-    private Thread = null;
+class Sensor{
     private Data d;
     private String location;
 
-    private SensorThread sensor = null;
-
     public Sensor(String l){
 	this.location = l;
-	start();
+	d = new Data();
+	//start();
     }
 
-    public void run(){
-	while(thread!=null){
-	  Random generator = new Random(); 
-	  int i = generator.nextInt(10) + 1;
-
-	  if(i == 3){
-	      sendDataToServer();
-	  }
-	}
-    }
-
-    public void start() throws IOException{
-     	if(thread == null){
-	    System.out.println('Sensor arrancado');
-
-	    sensor = new SensorThread();
-	    thread = new Thread(this);
-	    thread.start();
-	}
-    }
-
-    public void stop(){
-	if(thread != null){
-	    thread.stop();
-	    thread = null;
-	}
-	sensor.close();  
-	sensor.stop();
-    }
-
-    public getDataFromAPI(){
+    public void getDataFromAPI(){
 	//llamar a la api
 	/*String[] data = this.getWeatherDataFromJson(this.location, 1);
 
@@ -70,47 +33,58 @@ class Sensor implements Runnable{
 	    d.addData(s);
 	    }*/
 
-	d.addData('fake data, 0º/23º');
+	d.addData("fake data, 0º/23º");
     }
 
     public void sendDataToServer(){
 	//Aqui se hace la conexion TCP y se manda d;
-	Socket socket;
+	Socket socket = null;
 	int puerto=8888;
-	String anfitrion=”www.tumaebotcompany.ddns.net”;
+	String anfitrion="0.0.0.0";
 
 	try {
 	    socket=new Socket (anfitrion,puerto); //Abrimos el socket
-	} catch
-		(UnknownHostException e) {
-	    System.err.println(“Error: equipo desconocido”);
-	} catch (IOException e) {
-	    System.err.println(“Error:  no  se  pudo  establecer  la conexión”);
+	} catch(UnknownHostException e) {
+	    System.err.println("Error: equipo desconocido");
+	} catch(IOException e) {
+	    System.err.println("Error:  no  se  pudo  establecer  la conexión");
 	}
 
-	OutputStream outputStream = socketServicio.getOutputStream();
-
+	OutputStream outputStream = null;
+	
+	try{
+	    outputStream = socket.getOutputStream();
+	}catch (IOException ioe){
+	    System.out.println("error: " + ioe.getMessage());
+	}
+	    
 	PrintWriter outPrinter = new PrintWriter(outputStream,true);
 
 	//Enviamos los datos del sensor
 
 	if(this.location == null){
-	    outPrinter.print(d.getLocation);
+	    outPrinter.println("LOCATION:" + d.getLocation() + "DATA:" + d.getData());
 	}else{
-	    outPrinter.println(this.location);
+	    outPrinter.println(this.location + "DATA:" + d.getData());
 	}
 
-	for(String s: d.getData()){
-	    outPrinter.println(s);
+	//for(String s: d.getData()){
+	//outPrinter.println(d.getData());
+	    //}
+	try{
+	    outputStream.close();
+	}catch(IOException ioe){
+	    System.out.println("error: " + ioe.getMessage());
 	}
-
-	outputStream.close();
-	socket.close();
 	
-	
+	try{
+	    socket.close();
+	}catch(IOException ioe){
+	    System.out.println("error: " + ioe.getMessage());
+	}
     }
 
-    public verifiRequest(){
+    public int verifiRequest(){
 	//hay que recibir datos por tcp
 	//Si se recibe
 	return 1;
@@ -121,9 +95,12 @@ class Sensor implements Runnable{
 	if(args.length != 1)
 	    System.out.println("Uso: java sensor (localizacion del sensor)");
 	else{
-	    sensor = new Sensor(agrs[0]);
+	    sensor = new Sensor(args[0]);
+	    sensor.getDataFromAPI();
+	    sensor.sendDataToServer();
 	}
     }
+}
 
 
     /*private String formatHighLows(double high, double low) {
@@ -322,4 +299,4 @@ class Sensor implements Runnable{
 	    return null;
 	}
     }*/
-}
+
