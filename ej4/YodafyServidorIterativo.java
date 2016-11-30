@@ -25,7 +25,7 @@ public class YodafyServidorIterativo {
 				serverSocket.receive(paquete);
 				System.out.println("Paquete recibido");
 				ProcesadorYodafy procesador = new ProcesadorYodafy(serverSocket, paquete);
-				procesador.procesa();
+				procesador.start();
 			} while (true);
 		} catch (IOException e) {
 			System.err.println("Error al escuchar en el puerto "+port);
