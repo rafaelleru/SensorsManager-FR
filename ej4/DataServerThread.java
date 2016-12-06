@@ -27,9 +27,10 @@ public class DataServerThread  extends Thread{
 	address = paqueteRecibido.getAddress();
 	port = paqueteRecibido.getPort();
 	bufer = sendToServer(msj);
+	
         
-	System.out.println("-------------------------------------------");
-	System.out.println(bufer);
+	saveData("------------------------------");
+	saveData(bufer);
 	
     }
     
@@ -39,6 +40,26 @@ public class DataServerThread  extends Thread{
 	f = "Fecha: "+s[0]+"\nLocalizacion: "+s[1]+"\nTemperatura: "+s[2]+"\n";
 	return f;
 	
+    }
+
+    private void  saveData(String t){
+	FileWriter archivo = null;
+	PrintWriter escribir = null;
+
+	try{
+	    archivo = new FileWriter("./DatosTemperatura.txt", true);
+	    escribir = new PrintWriter(archivo);
+	    escribir.println(t);	    
+	}catch(Exception e){
+	    e.printStackTrace();
+	}finally{
+	    try{
+		if(archivo != null)
+		    archivo.close();
+	    }catch(Exception e){
+		e.printStackTrace();
+	    }
+	}
     }
     
     public void run(){
