@@ -28,8 +28,6 @@ public class DataServerThread  extends Thread{
 	port = paqueteRecibido.getPort();
 	bufer = sendToServer(msj);
         
-	System.out.println(msj);
-	
 	System.out.println("-------------------------------------------");
 	System.out.println(bufer);
 	

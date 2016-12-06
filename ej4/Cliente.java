@@ -1,7 +1,3 @@
-//
-// YodafyServidorIterativo
-// (CC) jjramos, 2012
-//
 import java.io.*;
 import java.net.*;
 import java.util.Date;
@@ -39,7 +35,7 @@ public class Cliente extends Thread{
 	    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH-mm-ss");
 	    Date date = new Date();
 	    informacion.setDate(dateFormat.format(date));
-	    informacion.addData("20c/10c");
+	    informacion.addData("20C / 10C");
 	    //Enviar un paquete
 	    buferEnvio=informacion.toString().getBytes();
 	    System.out.println(buferEnvio.length);
