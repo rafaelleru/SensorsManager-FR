@@ -46,8 +46,14 @@ public class DataManager{
 
     public static void executeOption(String option){
 	int opt = Integer.parseInt(option);
+	InetAddress  direccionget = null;
+	try{
+	    direccionget = InetAddress.getByName("localhost");
+	} catch(IOException e){
+		System.err.println("Error obteniendo la direccion");
+	    }
 	if(opt == 1){
-	    System.out.println("Que localizacion quieres consultar asqueroso: ");
+	    System.out.println("Que localizacion quieres consultar: ");
 	    String location = scanner.next();
 	
 	    //    try{
@@ -59,10 +65,10 @@ public class DataManager{
 	    //Lanzar metodo que recoja los datos.
 	    //try{
 	    byte[] buferEnvio;
-		buferEnvio = ("data_" + location).getBytes();
-		    DatagramPacket peticion = null;
-		peticion = new DatagramPacket(buferEnvio, buferEnvio.length, direccion, port);
-		getAndPrintData();
+	    buferEnvio = ("data_" + location).getBytes();
+	    DatagramPacket peticion = null;
+	    peticion = new DatagramPacket(buferEnvio, buferEnvio.length, direccionget, port);
+	    getAndPrintData();
 		/*} catch(IOException e){
 		System.err.println("Error haciendo la peticion al servidor");
 	    }*/
@@ -87,13 +93,19 @@ public class DataManager{
     }
 
     public static void getAndPrintData(){
-	int port = 8888;
+	int port = 9999;
 	InetAddress addres = null;
 
 	try{
 	    DatagramSocket datasocket = new DatagramSocket(port);
 	    DatagramPacket datapacket = null;
 
+	    try{
+		addres = InetAddress.getByName("localhost");
+	    } catch(IOException e){
+		System.err.println("Error obteniendo la direccion");
+	    }
+	
 	do{
 	    byte[] buffer = new byte[256];
 	    datapacket = new DatagramPacket(buffer, buffer.length);
