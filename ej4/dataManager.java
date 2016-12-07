@@ -71,7 +71,8 @@ public class dataManager{
     	try{
     	    direccion = InetAddress.getByName(host);
     	}catch(IOException e){ System.err.println("Error al obtener la direccion");}
-      int opt;
+      int opt = 0;
+      do{
         printMenu();
         opt = Integer.parseInt(scanner.next());
         try{
@@ -102,7 +103,7 @@ public class dataManager{
         //Imprimir los datos
         System.out.println(msj);
         System.out.println("********************");
-
+      }while(opt != -1)
 }
 
 }
